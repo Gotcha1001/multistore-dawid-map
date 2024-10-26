@@ -1,3 +1,5 @@
+"use client"; // Add this line to specify that this is a Client Component
+
 import { Loader } from "@googlemaps/js-api-loader";
 import { createRef, HTMLAttributes, useEffect } from "react";
 import { Location } from "./LocationPicker";
