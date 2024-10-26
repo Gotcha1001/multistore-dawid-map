@@ -1,7 +1,9 @@
+// Uploader.tsx
 "use client";
-import { IKContext, IKUpload } from "imagekitio-react";
+import { IKContext, IKUpload, IKUploadProps } from "imagekitio-react"; // Ensure IKUploadProps is imported
 
-export default function Uploader(IKUploadProps) {
+export default function Uploader(props: IKUploadProps) {
+  // Use explicit type for props
   return (
     <>
       <IKContext
@@ -12,7 +14,7 @@ export default function Uploader(IKUploadProps) {
           return await response.json();
         }}
       >
-        <IKUpload {...IKUploadProps} />
+        <IKUpload {...props} /> {/* Spread the props to IKUpload */}
       </IKContext>
     </>
   );
