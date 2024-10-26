@@ -1,8 +1,9 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+
 import { connect } from "@/libs/helpers";
 import { AdModel } from "@/models/Ad";
 import AdItem from "@/components/AdItem";
+import { authOptions } from "../api/auth/[...nextauth]/auth";
 
 export default async function MyAdsPage() {
   const session = await getServerSession(authOptions);
