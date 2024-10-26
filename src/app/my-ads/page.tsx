@@ -7,7 +7,7 @@ import { authOptions } from "../api/auth/[...nextauth]/auth";
 type Location = {
   lat: number;
   lng: number;
-  address?: string; // This field is required
+  address?: string; // Make address optional
 };
 
 type UploadResponse = {
@@ -42,27 +42,16 @@ export default async function MyAdsPage() {
   // Fetch ads from the database
   const rawAds = await AdModel.find({ userEmail: email }).lean();
 
-  // Log the fetched raw ads
-  console.log("Raw Ads from DB:", rawAds);
-
-  // Check the structure of the first ad (if any)
-  if (rawAds.length > 0) {
-    console.log("First Ad Structure:", rawAds[0]);
-  }
-
   // Map the raw ads to AdDocument type, and convert ObjectId if necessary
   const ads: AdDocument[] = rawAds.map((ad) => ({
     ...ad,
-    _id: ad._id.toString(), // If _id is a string already, this may be unnecessary
+    _id: ad._id.toString(), // Convert ObjectId to string
     location: {
       lat: ad.location.lat,
       lng: ad.location.lng,
       address: ad.location.address || "Default Address", // Provide a default address if missing
     },
   }));
-
-  // Log the mapped ads
-  console.log("Mapped Ads:", ads);
 
   return (
     <div className="container my-6 gradient-background2 rounded-lg mx-auto">
