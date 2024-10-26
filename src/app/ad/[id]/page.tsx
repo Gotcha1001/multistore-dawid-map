@@ -11,13 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-
-// Define file type
-type FileType = {
-  fileId: string;
-  filePath: string;
-  [key: string]: unknown;
-};
+import { UploadResponse } from "imagekit/dist/libs/interfaces";
 
 // Define location type
 type Location = {
@@ -36,7 +30,7 @@ type AdDocument = {
   contact: string;
   userEmail: string;
   location: Location;
-  files: FileType[];
+  files: UploadResponse[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -59,8 +53,8 @@ type ConvertiblePrimitive =
 // Define recursive convertible type
 type Convertible =
   | ConvertiblePrimitive
-  | FileType
   | Location
+  | UploadResponse
   | Convertible[]
   | { [key: string]: Convertible };
 
