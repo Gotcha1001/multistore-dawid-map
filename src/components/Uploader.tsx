@@ -1,6 +1,7 @@
-import { IKContext, IKUpload, IKUploadProps } from "imagekitio-react";
+import { IKContext, IKUpload } from "imagekitio-react";
 
-export default function Uploader(props: IKUploadProps) {
+// Use Record<string, any> for general props if specific type is unknown
+export default function Uploader(props: Record<string, any>) {
   return (
     <>
       <IKContext
