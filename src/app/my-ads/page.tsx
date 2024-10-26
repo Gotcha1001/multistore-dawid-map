@@ -5,7 +5,6 @@ import AdItem from "@/components/AdItem";
 import { authOptions } from "../api/auth/[...nextauth]/auth";
 import { Types } from "mongoose";
 
-// Define a union type for the input to the helper function
 type Convertible =
   | Types.ObjectId
   | string
@@ -16,7 +15,13 @@ type Convertible =
   | Convertible[]
   | { [key: string]: Convertible };
 
-// Helper function to convert ObjectIds to strings
+interface Ad {
+  _id: string;
+  name: string;
+  url: string;
+  // Add other properties based on your Ad schema
+}
+
 const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
   if (obj === null || obj === undefined) {
     return obj;
@@ -51,16 +56,18 @@ export default async function MyAdsPage() {
   }
 
   await connect();
-  const rawAds = await AdModel.find({ userEmail: email }).lean();
-  const ads = convertObjectIdsToStrings(rawAds);
+  const rawAds: Ad[] = await AdModel.find({ userEmail: email }).lean();
+  const ads: Ad[] = convertObjectIdsToStrings(rawAds) as Ad[];
 
   return (
     <div className="container my-6 gradient-background2 rounded-lg mx-auto">
       <h1 className="text-3xl text-white font-bold mb-4 text-center">My Ads</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
-        {ads?.map((ad) => (
-          <AdItem key={ad._id} ad={ad} />
-        ))}
+        {ads && ads.length > 0 ? (
+          ads.map((ad) => <AdItem key={ad._id} ad={ad} />)
+        ) : (
+          <p>No ads available.</p>
+        )}
       </div>
     </div>
   );
