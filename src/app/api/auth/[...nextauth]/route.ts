@@ -1,16 +1,17 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../[...nextauth]/auth";
+import ImageKit from "imagekit";
 
-export const authOptions = {
-  secret: process.env.SECRET,
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
-  ],
+export const GET = async () => {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json(false);
+  }
+
+  const ik = new ImageKit({
+    urlEndpoint: process.env.NEXT_PUBLIC_IK_ENDPOINT as string,
+    publicKey: process.env.NEXT_PUBLIC_IK_PUBLIC_KEY as string,
+    privateKey: process.env.IK_PRIVATE_KEY as string,
+  });
+  return Response.json(ik.getAuthenticationParameters());
 };
-
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
