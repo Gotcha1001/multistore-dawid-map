@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function AdItem({ ad }: { ad: Ad }) {
   return (
-    <div className="min-h-24 flex flex-col justify-start" key={ad.id}>
+    <div className="min-h-24 flex flex-col justify-start" key={ad._id}>
       {ad.files?.length > 0 && (
         <div className="rounded-lg overflow-hidden relative">
           <motion.div
