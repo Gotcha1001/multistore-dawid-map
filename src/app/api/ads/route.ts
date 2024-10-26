@@ -1,5 +1,5 @@
 import { connect } from "@/libs/helpers";
-import { AdModel } from "@/models/Ad";
+import { Ad, AdModel } from "@/models/Ad";
 import { FilterQuery, PipelineStage } from "mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/auth";
@@ -17,8 +17,8 @@ export async function GET(req: Request) {
     const radius = searchParams.get("radius");
     const center = searchParams.get("center");
 
-    const filter: FilterQuery<any> = {};
-    const aggregationSteps: PipelineStage[] = [];
+    const filter: FilterQuery<Ad> = {}; // Use Ad as the schema type
+    const aggregationSteps: PipelineStage[] = []; // No need to type PipelineStage with model
 
     if (phrase) {
       filter.title = { $regex: `.*${phrase}.*`, $options: "i" };
