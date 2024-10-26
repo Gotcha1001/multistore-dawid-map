@@ -1,14 +1,18 @@
-// UploadArea.tsx
 import { faAdd, faImage } from "@fortawesome/free-solid-svg-icons";
 import Uploader from "./Uploader";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
-import { UploadResponse } from "imagekitio-react";
+
+// Replace UploadResponse with UploadedFile
+type UploadedFile = {
+  fileId: string;
+  url: string;
+};
 
 type Props = {
-  files: UploadResponse[];
-  setFiles: Dispatch<SetStateAction<UploadResponse[]>>;
+  files: UploadedFile[];
+  setFiles: Dispatch<SetStateAction<UploadedFile[]>>;
 };
 
 export default function UploadArea({ files, setFiles }: Props) {
@@ -31,7 +35,7 @@ export default function UploadArea({ files, setFiles }: Props) {
         >
           <Uploader
             onUploadStart={() => setIsUploading(true)}
-            onSuccess={(file: UploadResponse) => {
+            onSuccess={(file: UploadedFile) => {
               setFiles((prev) => [...prev, file]); // Add the file to the state
               setIsUploading(false); // Stop the upload process
             }}
