@@ -1,9 +1,8 @@
 import { connect } from "@/libs/helpers";
 import { Ad, AdModel } from "@/models/Ad";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, PipelineStage } from "mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/auth";
-import { PipelineStage } from "mongoose";
 
 // Asynchronous function to handle GET requests
 export async function GET(req: Request) {
@@ -18,7 +17,6 @@ export async function GET(req: Request) {
   const center = searchParams.get("center");
 
   const filter: FilterQuery<Ad> = {};
-
   const aggregationSteps: PipelineStage[] = [];
 
   if (phrase) {
@@ -56,48 +54,28 @@ export async function GET(req: Request) {
     });
   }
 
-  aggregationSteps.push({
-    $match: filter,
-  });
+  aggregationSteps.push({ $match: filter });
+  aggregationSteps.push({ $sort: { createdAt: -1 } });
 
-  aggregationSteps.push({
-    $sort: { createdAt: -1 },
-  });
+  // Execute aggregation and convert each document to a plain JavaScript object
+  const adsDocs = await AdModel.aggregate(aggregationSteps);
+  const plainAdsDocs = adsDocs.map((ad) => ad.toObject());
 
-  try {
-    // Step 6: Query the Ad collection, applying the filter and sorting by creation date (newest first)
-    const adsDocs = await AdModel.aggregate(aggregationSteps).lean(); // Use .lean() for plain objects
-
-    // Step 7: Return the retrieved documents (ads) as a JSON response
-    return Response.json(adsDocs);
-  } catch (error) {
-    console.error("Error fetching ads:", error);
-    return new Response("Internal Server Error", { status: 500 });
-  }
+  return Response.json(plainAdsDocs);
 }
 
 export async function DELETE(req: Request) {
   const url = new URL(req.url);
   const id = url.searchParams.get("id");
-
   await connect();
 
+  const adDoc = await AdModel.findById(id);
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 });
+  if (!adDoc || adDoc.userEmail !== session?.user?.email) {
+    return Response.json(false);
   }
 
-  try {
-    const adDoc = await AdModel.findById(id);
-    if (!adDoc || adDoc.userEmail !== session.user.email) {
-      return new Response("Forbidden", { status: 403 });
-    }
-
-    await AdModel.findByIdAndDelete(id);
-    return Response.json(true);
-  } catch (error) {
-    console.error("Error deleting ad:", error);
-    return new Response("Internal Server Error", { status: 500 });
-  }
+  await AdModel.findByIdAndDelete(id);
+  return Response.json(true);
 }
