@@ -6,23 +6,13 @@ import { AdModel } from "@/models/Ad";
 import AdItem from "@/components/AdItem";
 import { authOptions } from "../api/auth/[...nextauth]/auth";
 import { Types } from "mongoose";
+import { UploadResponse as ImageKitUploadResponse } from "imagekit"; // Ensure correct import
 
 // Define the ad document type
 type Location = {
   lat: number;
   lng: number;
   address: string;
-};
-
-type UploadResponse = {
-  // Ensure this structure matches the response from ImageKit
-  url: string;
-  name: string;
-  fileId: string; // Added required fields based on the error
-  thumbnailUrl?: string; // Optional fields
-  height?: number;
-  width?: number;
-  // Add any other required properties from the UploadResponse type here
 };
 
 type AdDocument = {
@@ -34,7 +24,7 @@ type AdDocument = {
   contact: string;
   userEmail: string;
   location: Location;
-  files: UploadResponse[]; // Ensure this matches what your Ad model expects
+  files: ImageKitUploadResponse[]; // Use the correct type from imagekit
   createdAt: Date;
   updatedAt: Date;
 };
@@ -42,7 +32,6 @@ type AdDocument = {
 // Define the converted document type
 type ConvertedAd = Omit<AdDocument, "_id"> & {
   _id: string;
-  files: UploadResponse[]; // Make sure this matches the expected type
 };
 
 // Function to convert ObjectId to string
@@ -90,7 +79,7 @@ export default async function MyAdsPage() {
       <h1 className="text-3xl text-white font-bold mb-4 text-center">My Ads</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
         {ads.map((ad) => (
-          <AdItem key={ad._id} ad={ad} /> // Ensure AdItem component is compatible with ConvertedAd type
+          <AdItem key={ad._id} ad={ad} /> // Pass ConvertedAd to AdItem
         ))}
       </div>
     </div>

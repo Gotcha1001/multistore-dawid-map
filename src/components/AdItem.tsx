@@ -1,10 +1,11 @@
 "use client";
-import { Ad } from "@/models/Ad";
+import { UploadResponse as ImageKitUploadResponse } from "imagekit"; // Ensure correct import
 import Link from "next/link";
 import UploadThumbnail from "./UploadThumbnail";
 import { motion } from "framer-motion";
 
-export default function AdItem({ ad }: { ad: Ad }) {
+// Update props to use the correct type for ad
+export default function AdItem({ ad }: { ad: ConvertedAd }) {
   return (
     <div className="min-h-24 flex flex-col justify-start" key={ad._id}>
       {ad.files?.length > 0 && (
