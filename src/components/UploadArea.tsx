@@ -4,13 +4,11 @@ import Uploader from "./Uploader";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
-import { UploadResponse as IKUploadResponse } from "imagekit-javascript/dist/src/interfaces/UploadResponse"; // Use this import
-// ... other imports remain the same
+import { UploadResponse } from "imagekit/dist/libs/interfaces";
 
-// Update the Props type
 type Props = {
-  files: IKUploadResponse[]; // Change to the imported UploadResponse type
-  setFiles: Dispatch<SetStateAction<IKUploadResponse[]>>; // Same here
+  files: UploadResponse[];
+  setFiles: Dispatch<SetStateAction<UploadResponse[]>>;
 };
 
 export default function UploadArea({ files, setFiles }: Props) {
@@ -33,12 +31,12 @@ export default function UploadArea({ files, setFiles }: Props) {
         >
           <Uploader
             onUploadStart={() => setIsUploading(true)}
-            onSuccess={(file: IKUploadResponse) => {
-              // Change here
-              setFiles((prev) => [...prev, file]);
-              setIsUploading(false);
+            onSuccess={(file: UploadResponse) => {
+              setFiles((prev) => [...prev, file]); // Add the file to the state
+              setIsUploading(false); // Stop the upload process
             }}
           />
+
           {isUploading ? (
             <span>Uploading...</span>
           ) : (
