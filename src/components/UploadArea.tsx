@@ -4,8 +4,7 @@ import Uploader from "./Uploader";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
-// Ensure you're importing UploadResponse from the correct package
-import { UploadResponse } from "imagekitio-react/dist/types/interfaces"; // Change this line
+import { UploadResponse } from "imagekitio-react";
 
 type Props = {
   files: UploadResponse[];
