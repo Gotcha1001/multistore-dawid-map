@@ -12,7 +12,7 @@ export default async function MyAdsPage() {
     return "No Email Found";
   }
   await connect();
-  const adsDocs = await AdModel.find({ userEmail: email });
+  const adsDocs = await AdModel.find({ userEmail: email }).lean();
 
   return (
     <div className="container my-6 gradient-background2 rounded-lg mx-auto">
