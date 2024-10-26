@@ -1,4 +1,5 @@
 import { IKContext, IKUpload } from "imagekitio-react";
+import { IKUploadProps } from "imagekitio-react/dist/types/components/IKUpload/props";
 
 // Extend IKUploadProps if you need additional custom props
 type UploaderProps = IKUploadProps;
