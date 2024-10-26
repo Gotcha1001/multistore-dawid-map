@@ -33,6 +33,7 @@ export default function DistancePicker({
         gestureHandling: "greedy",
         zoomControl: true,
       });
+
       const circle = new Circle({
         map,
         strokeColor: "#FF0000",
@@ -72,7 +73,7 @@ export default function DistancePicker({
       console.log("using center from LS");
       setCenter(JSON.parse(centerFromLS));
     }
-  }, [center]); // Keep 'center' as dependency, we'll add others below
+  }, [center, radius, zoom]); // Added 'radius' and 'zoom' to the dependency array
 
   useEffect(() => {
     if (center && radius) {
@@ -107,9 +108,9 @@ export default function DistancePicker({
   return (
     <>
       <label>Where</label>
-      <div ref={mapsDiv} className="w-full h-48 bg-gray-200 rounded-lg ">
+      <div ref={mapsDiv} className="w-full h-48 bg-gray-200 rounded-lg">
         {(!center || geoError) && (
-          <div className="text-gray-400  text-center gradient-background2 rounded-lg  p-4">
+          <div className="text-gray-400 text-center gradient-background2 rounded-lg p-4">
             {geoError || "Loading map..."}
           </div>
         )}
