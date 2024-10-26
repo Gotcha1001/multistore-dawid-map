@@ -12,7 +12,19 @@ import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 
-const convertObjectIdsToStrings = (obj: any): any => {
+// Define a union type for the input to the helper function
+type Convertible =
+  | Types.ObjectId
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Convertible[]
+  | { [key: string]: Convertible };
+
+// Helper function to convert ObjectIds to strings
+const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
   if (obj === null || obj === undefined) {
     return obj;
   }
@@ -69,7 +81,7 @@ export default async function SingleAdPage(args: Props) {
           {ad.title}
         </h1>
 
-        {session && session?.user?.email === ad.userEmail && (
+        {session && session.user.email === ad.userEmail && (
           <div className="mt-2 flex gap-2">
             <Link
               href={`/edit/${ad._id}`}
