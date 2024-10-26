@@ -1,7 +1,29 @@
-import { IKContext, IKUpload, IKUploadProps } from "imagekitio-react";
+import { IKContext, IKUpload } from "imagekitio-react";
 
-// Extend IKUploadProps if you need additional custom props
-type UploaderProps = IKUploadProps;
+interface UploaderProps {
+  fileName?: string;
+  tags?: string[];
+  useUniqueFileName?: boolean;
+  responseFields?: string[];
+  validateFile?: (file: File) => boolean;
+  folder?: string;
+  isPrivateFile?: boolean;
+  customCoordinates?: string;
+  extensions?: unknown[];
+  webhookUrl?: string;
+  overwriteFile?: boolean;
+  overwriteAITags?: boolean;
+  overwriteTags?: boolean;
+  overwriteCustomMetadata?: boolean;
+  transformation?: string;
+  customMetadata?: Record<string, unknown>;
+  onError?: (err: Error) => void;
+  onSuccess?: (response: any) => void;
+  onUploadStart?: (evt: any) => void;
+  onUploadProgress?: (evt: any) => void;
+  style?: React.CSSProperties;
+  className?: string;
+}
 
 export default function Uploader(props: UploaderProps) {
   return (
