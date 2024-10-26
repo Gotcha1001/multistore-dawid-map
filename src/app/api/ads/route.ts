@@ -2,7 +2,7 @@ import { connect } from "@/libs/helpers";
 import { Ad, AdModel } from "@/models/Ad";
 import { FilterQuery } from "mongoose";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]/auth";
 
 // Asynchronous function to handle GET requests
 export async function GET(req: Request) {

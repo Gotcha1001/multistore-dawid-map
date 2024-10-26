@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import MyImage from "./MyImage";
 
-export default function Gallery({ files }: { files: UploadResponse }) {
+export default function Gallery({ files }: { files: UploadResponse[] }) {
   const [activeFile, setActiveFile] = useState<UploadResponse | null>(
     files?.[0] || null
   );

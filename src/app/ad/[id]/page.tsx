@@ -29,12 +29,10 @@ export default async function SingleAdPage(args: Props) {
 
   return (
     <div className="flex flex-col md:flex-row absolute inset-0 top-28 gap-4 p-4">
-      {/* Gallery - Full width on mobile, 3/5 on desktop */}
       <div className="w-full md:w-3/5 bg-black text-white flex flex-col relative rounded-md min-h-[300px]">
         <Gallery files={adDoc.files} />
       </div>
 
-      {/* Ad details - Full width on mobile, 2/5 on desktop */}
       <div
         className="w-full md:w-2/5 p-4 md:p-6 grow-0 bg-gradient-to-r from-black to-blue-500 rounded-lg 
         shadow-lg flex flex-col space-y-4 text-white max-h-[calc(100vh-8rem)] overflow-y-auto"
