@@ -4,7 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
 import DeleteAdButton from "@/components/DeleteAdButton";
 import Gallery from "@/components/Gallery";
 import LocationMap from "@/components/LocationMap";
-import { connect, formatDate, formatMoney } from "@/libs/helpers";
+import { connect, formatMoney } from "@/libs/helpers";
 import { AdModel } from "@/models/Ad";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

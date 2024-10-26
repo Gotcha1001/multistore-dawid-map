@@ -5,8 +5,19 @@ import AdItem from "@/components/AdItem";
 import { authOptions } from "../api/auth/[...nextauth]/auth";
 import { Types } from "mongoose";
 
+// Define a union type for the input to the helper function
+type Convertible =
+  | Types.ObjectId
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Convertible[]
+  | { [key: string]: Convertible };
+
 // Helper function to convert ObjectIds to strings
-const convertObjectIdsToStrings = (obj: any): any => {
+const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
   if (obj === null || obj === undefined) {
     return obj;
   }
