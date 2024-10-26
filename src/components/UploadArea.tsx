@@ -4,8 +4,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
 
-// Replace UploadResponse with UploadedFile
-type UploadedFile = {
+// Define the UploadedFile type here
+export type UploadedFile = {
   fileId: string;
   url: string;
 };
@@ -52,7 +52,7 @@ export default function UploadArea({ files, setFiles }: Props) {
         </label>
         <div className="flex flex-wrap gap-2 mt-2">
           {files.map((file) => (
-            <div key={file.fileId} className="size-16 rounded overflow-hidden ">
+            <div key={file.fileId} className="size-16 rounded overflow-hidden">
               <UploadThumbnail file={file} />
             </div>
           ))}

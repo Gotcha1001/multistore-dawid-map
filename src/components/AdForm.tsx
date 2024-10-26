@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { redirect } from "next/navigation";
-import { UploadResponse } from "imagekit/dist/libs/interfaces";
+import { UploadedFile } from "./UploadArea"; // Import the new type from UploadArea
 import {
   faLocationCrosshairs,
   faSpinner,
@@ -16,7 +16,7 @@ import { createAd, updataAd } from "@/app/actions/adActions";
 
 type Props = {
   id?: string | null;
-  defaultFiles?: UploadResponse[];
+  defaultFiles?: UploadedFile[];
   defaultLocation: Location;
   defaultTexts?: AdTexts;
 };
@@ -27,7 +27,7 @@ export default function AdForm({
   defaultLocation,
   defaultTexts = {},
 }: Props) {
-  const [files, setFiles] = useState<UploadResponse[]>(defaultFiles);
+  const [files, setFiles] = useState<UploadedFile[]>(defaultFiles);
   const [location, setLocation] = useState<Location>(defaultLocation);
   const [gpsCoords, setGpsCoords] = useState<Location | null>(null);
   const [isLocating, setIsLocating] = useState(false);
