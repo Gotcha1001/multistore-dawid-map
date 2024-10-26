@@ -12,34 +12,7 @@ import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 
-type FileType = "image" | "video" | "document"; // Adjust this according to your needs
-
-// Define a type for the file object
-interface File {
-  fileId: string;
-  name: string;
-  url: string;
-  thumbnailUrl?: string; // optional
-  height?: number; // optional
-  width?: number; // optional
-  size?: number; // optional
-  fileType?: FileType; // optional
-  isPrivateFile?: boolean; // optional
-}
-
-interface Ad {
-  _id: string;
-  title: string;
-  userEmail: string;
-  price: number;
-  category: string;
-  description: string;
-  contact: string;
-  location: { lat: number; lng: number }; // Adjust based on your actual location type
-  files: File[]; // Use the File type defined above
-}
-
-const convertObjectIdsToStrings = (obj: unknown): unknown => {
+const convertObjectIdsToStrings = (obj: any): any => {
   if (obj === null || obj === undefined) {
     return obj;
   }
@@ -80,8 +53,7 @@ export default async function SingleAdPage(args: Props) {
     return "Not Found!!!";
   }
 
-  // Convert ObjectIds and assert the type
-  const ad = convertObjectIdsToStrings(rawAd) as Ad;
+  const ad = convertObjectIdsToStrings(rawAd);
 
   return (
     <div className="flex flex-col md:flex-row absolute inset-0 top-28 gap-4 p-4">
@@ -97,7 +69,7 @@ export default async function SingleAdPage(args: Props) {
           {ad.title}
         </h1>
 
-        {session && session.user?.email === ad.userEmail && (
+        {session && session?.user?.email === ad.userEmail && (
           <div className="mt-2 flex gap-2">
             <Link
               href={`/edit/${ad._id}`}
@@ -146,6 +118,11 @@ export default async function SingleAdPage(args: Props) {
             className="w-full h-48 md:h-64 rounded-lg"
             location={ad.location}
           />
+          {/* 
+          <p className="mt-2 md:mt-4 text-gray-400 text-xs">
+            Posted: {formatDate(ad.createdAt)} <br />
+            Last Updated: {formatDate(ad.updatedAt)}
+          </p> */}
         </div>
       </div>
     </div>

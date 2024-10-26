@@ -24,6 +24,7 @@ export default function Gallery({ files }: { files: UploadResponse[] }) {
     const nextFile = files[nextIndex];
     setActiveFile(nextFile);
   }
+
   function prev() {
     const activeFileIndex = files.findIndex(
       (f) => f.fileId === activeFile?.fileId
