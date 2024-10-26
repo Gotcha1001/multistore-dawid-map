@@ -64,22 +64,40 @@ export async function GET(req: Request) {
     $sort: { createdAt: -1 },
   });
 
-  // Step 6: Query the Ad collection, applying the filter and sorting by creation date (newest first)
-  const adsDocs = await AdModel.aggregate(aggregationSteps);
+  try {
+    // Step 6: Query the Ad collection, applying the filter and sorting by creation date (newest first)
+    const adsDocs = await AdModel.aggregate(aggregationSteps).lean(); // Use .lean() for plain objects
 
-  // Step 7: Return the retrieved documents (ads) as a JSON response
-  return Response.json(adsDocs);
+    // Step 7: Return the retrieved documents (ads) as a JSON response
+    return Response.json(adsDocs);
+  } catch (error) {
+    console.error("Error fetching ads:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
 }
 
 export async function DELETE(req: Request) {
   const url = new URL(req.url);
   const id = url.searchParams.get("id");
+
   await connect();
-  const adDoc = await AdModel.findById(id);
+
   const session = await getServerSession(authOptions);
-  if (!adDoc || adDoc.userEmail !== session?.user?.email) {
-    return Response.json(false);
+
+  if (!session) {
+    return new Response("Unauthorized", { status: 401 });
   }
-  await AdModel.findByIdAndDelete(id);
-  return Response.json(true);
+
+  try {
+    const adDoc = await AdModel.findById(id);
+    if (!adDoc || adDoc.userEmail !== session.user.email) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
+    await AdModel.findByIdAndDelete(id);
+    return Response.json(true);
+  } catch (error) {
+    console.error("Error deleting ad:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
 }
