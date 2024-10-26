@@ -3,7 +3,6 @@ import { connect } from "@/libs/helpers";
 import { AdModel } from "@/models/Ad";
 import AdItem from "@/components/AdItem";
 import { authOptions } from "../api/auth/[...nextauth]/auth";
-import { Types } from "mongoose";
 
 type Location = {
   lat: number;
