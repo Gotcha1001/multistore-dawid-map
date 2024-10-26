@@ -46,52 +46,49 @@ type ConvertedAd = Omit<AdDocument, "_id"> & {
   _id: string;
 };
 
-// Define recursive type for objects
-type RecursiveObject = {
-  [key: string]: Convertible;
-};
-
-// Define union type for convertible values
-type Convertible =
+// Define base convertible types
+type ConvertiblePrimitive =
   | Types.ObjectId
   | string
   | number
   | boolean
   | null
   | undefined
-  | Date
+  | Date;
+
+// Define recursive convertible type
+type Convertible =
+  | ConvertiblePrimitive
   | FileType
   | Location
   | Convertible[]
-  | RecursiveObject;
+  | { [key: string]: Convertible };
 
-const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
-  if (obj === null || obj === undefined) {
-    return obj;
+const convertObjectIdsToStrings = (input: Convertible): Convertible => {
+  if (input === null || input === undefined) {
+    return input;
   }
 
-  if (obj instanceof Types.ObjectId) {
-    return obj.toString();
+  if (input instanceof Types.ObjectId) {
+    return input.toString();
   }
 
-  if (obj instanceof Date) {
-    return obj;
+  if (input instanceof Date) {
+    return input;
   }
 
-  if (Array.isArray(obj)) {
-    return obj.map(convertObjectIdsToStrings);
+  if (Array.isArray(input)) {
+    return input.map((item) => convertObjectIdsToStrings(item));
   }
 
-  if (typeof obj === "object") {
+  if (typeof input === "object") {
+    const entries = Object.entries(input) as [string, Convertible][];
     return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        key,
-        convertObjectIdsToStrings(value),
-      ])
+      entries.map(([key, value]) => [key, convertObjectIdsToStrings(value)])
     );
   }
 
-  return obj;
+  return input;
 };
 
 type Props = {
