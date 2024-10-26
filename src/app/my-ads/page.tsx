@@ -8,65 +8,26 @@ import { Types } from "mongoose";
 type Location = {
   lat: number;
   lng: number;
-  address: string;
+  address?: string; // This field is required
 };
 
 type UploadResponse = {
-  // Define the structure based on your image response
   url: string;
   name: string;
 };
 
 type AdDocument = {
-  _id: string; // Change this to string if you're using lean()
+  _id: string; // Assume _id is a string since using lean()
   title: string;
   price: number;
   description: string;
   category: string;
   contact: string;
   userEmail: string;
-  location: Location;
+  location: Location; // Ensure the shape matches what you expect
   files: UploadResponse[];
   createdAt: Date;
   updatedAt: Date;
-};
-
-// Define a more specific convertible type
-type Convertible =
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | Types.ObjectId
-  | Location
-  | UploadResponse
-  | Convertible[]
-  | { [key: string]: Convertible };
-
-const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
-  if (obj === null || obj === undefined) {
-    return obj;
-  }
-
-  if (obj instanceof Types.ObjectId) {
-    return obj.toString();
-  }
-
-  if (Array.isArray(obj)) {
-    return obj.map(convertObjectIdsToStrings);
-  }
-
-  if (typeof obj === "object") {
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        key,
-        convertObjectIdsToStrings(value),
-      ])
-    );
-  }
-
-  return obj;
 };
 
 export default async function MyAdsPage() {
@@ -78,15 +39,38 @@ export default async function MyAdsPage() {
   }
 
   await connect();
-  const rawAds: AdDocument[] = await AdModel.find({ userEmail: email }).lean();
-  const ads = rawAds.map((ad) => convertObjectIdsToStrings(ad)) as AdDocument[];
+
+  // Fetch ads from the database
+  const rawAds = await AdModel.find({ userEmail: email }).lean();
+
+  // Log the fetched raw ads
+  console.log("Raw Ads from DB:", rawAds);
+
+  // Check the structure of the first ad (if any)
+  if (rawAds.length > 0) {
+    console.log("First Ad Structure:", rawAds[0]);
+  }
+
+  // Map the raw ads to AdDocument type, and convert ObjectId if necessary
+  const ads: AdDocument[] = rawAds.map((ad) => ({
+    ...ad,
+    _id: ad._id.toString(), // If _id is a string already, this may be unnecessary
+    location: {
+      lat: ad.location.lat,
+      lng: ad.location.lng,
+      address: ad.location.address || "Default Address", // Provide a default address if missing
+    },
+  }));
+
+  // Log the mapped ads
+  console.log("Mapped Ads:", ads);
 
   return (
     <div className="container my-6 gradient-background2 rounded-lg mx-auto">
       <h1 className="text-3xl text-white font-bold mb-4 text-center">My Ads</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
         {ads.length > 0 ? (
-          ads.map((ad) => <AdItem key={ad._id.toString()} ad={ad} />)
+          ads.map((ad) => <AdItem key={ad._id} ad={ad} />)
         ) : (
           <p>No ads available.</p>
         )}
