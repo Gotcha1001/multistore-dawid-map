@@ -1,5 +1,38 @@
 import { IKContext, IKUpload } from "imagekitio-react";
 
+// Define specific types for the ImageKit response
+interface IKUploadResponse {
+  fileId: string;
+  name: string;
+  url: string;
+  thumbnailUrl: string;
+  height: number;
+  width: number;
+  size: number;
+  filePath: string;
+  fileType: string;
+  tags?: string[];
+  AITags?: string[];
+  versionInfo?: {
+    id: string;
+    name: string;
+  };
+  metadata?: Record<string, unknown>;
+}
+
+// Define upload progress event type
+interface IKUploadProgressEvent {
+  loaded: number;
+  total: number;
+  percentage: number;
+}
+
+// Define upload start event type
+interface IKUploadStartEvent {
+  file: File;
+  xhr: XMLHttpRequest;
+}
+
 interface UploaderProps {
   fileName?: string;
   tags?: string[];
@@ -9,7 +42,7 @@ interface UploaderProps {
   folder?: string;
   isPrivateFile?: boolean;
   customCoordinates?: string;
-  extensions?: unknown[];
+  extensions?: string[];
   webhookUrl?: string;
   overwriteFile?: boolean;
   overwriteAITags?: boolean;
@@ -18,9 +51,9 @@ interface UploaderProps {
   transformation?: string;
   customMetadata?: Record<string, unknown>;
   onError?: (err: Error) => void;
-  onSuccess?: (response: any) => void;
-  onUploadStart?: (evt: any) => void;
-  onUploadProgress?: (evt: any) => void;
+  onSuccess?: (response: IKUploadResponse) => void;
+  onUploadStart?: (evt: IKUploadStartEvent) => void;
+  onUploadProgress?: (evt: IKUploadProgressEvent) => void;
   style?: React.CSSProperties;
   className?: string;
 }
