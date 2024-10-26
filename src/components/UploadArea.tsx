@@ -8,6 +8,12 @@ import UploadThumbnail from "./UploadThumbnail";
 export type UploadedFile = {
   fileId: string;
   url: string;
+  fileType?: string; // Add optional properties as needed
+  name?: string;
+  thumbnailUrl?: string;
+  height?: number;
+  width?: number;
+  filePath?: string;
 };
 
 type Props = {

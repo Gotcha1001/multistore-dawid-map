@@ -1,8 +1,8 @@
-import { UploadResponse } from "imagekit/dist/libs/interfaces";
+import { UploadedFile } from "./UploadArea"; // Adjust import as necessary
 import MyImage from "./MyImage";
 
 type Props = {
-  file: UploadResponse;
+  file: UploadedFile;
   onClick?: () => void;
 };
 
@@ -21,8 +21,8 @@ export default function UploadThumbnail({ file, onClick }: Props) {
         <MyImage
           width={300}
           height={300}
-          alt="Uploaded thumbnail" // Use one alt prop
-          src={file.filePath}
+          alt="Uploaded thumbnail"
+          src={file.filePath || file.url} // Ensure there's a fallback if filePath is undefined
           aiCrop={true}
           className="object-contain"
         />
