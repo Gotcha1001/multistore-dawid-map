@@ -5,13 +5,42 @@ import AdItem from "@/components/AdItem";
 import { authOptions } from "../api/auth/[...nextauth]/auth";
 import { Types } from "mongoose";
 
+type Location = {
+  lat: number;
+  lng: number;
+  address: string;
+};
+
+type UploadResponse = {
+  // Define the structure based on your image response
+  url: string;
+  name: string;
+};
+
+type AdDocument = {
+  _id: Types.ObjectId;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  contact: string;
+  userEmail: string;
+  location: Location;
+  files: UploadResponse[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// Define a more specific convertible type
 type Convertible =
-  | Types.ObjectId
   | string
   | number
   | boolean
   | null
   | undefined
+  | Types.ObjectId
+  | Location
+  | UploadResponse
   | Convertible[]
   | { [key: string]: Convertible };
 
@@ -49,17 +78,15 @@ export default async function MyAdsPage() {
   }
 
   await connect();
-  const rawAds = await AdModel.find({ userEmail: email }).lean();
-
-  // Convert ObjectIds and any complex types to plain objects
-  const ads = convertObjectIdsToStrings(rawAds) as any; // Cast as any for flexibility
+  const rawAds: AdDocument[] = await AdModel.find({ userEmail: email }).lean();
+  const ads = rawAds.map((ad) => convertObjectIdsToStrings(ad)) as AdDocument[];
 
   return (
     <div className="container my-6 gradient-background2 rounded-lg mx-auto">
       <h1 className="text-3xl text-white font-bold mb-4 text-center">My Ads</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
-        {ads && ads.length > 0 ? (
-          ads.map((ad: any) => <AdItem key={ad._id} ad={ad} />)
+        {ads.length > 0 ? (
+          ads.map((ad) => <AdItem key={ad._id.toString()} ad={ad} />)
         ) : (
           <p>No ads available.</p>
         )}
