@@ -1,7 +1,7 @@
 "use client"; // Add this line to specify that this is a Client Component
 
 import { Loader } from "@googlemaps/js-api-loader";
-import { createRef, HTMLAttributes, useEffect } from "react";
+import { HTMLAttributes, useEffect, useRef } from "react";
 import { Location } from "./LocationPicker";
 
 type Props = HTMLAttributes<HTMLDivElement> & {
@@ -9,7 +9,7 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 };
 
 export default function LocationMap({ location, ...divProps }: Props) {
-  const mapsDivRef = createRef<HTMLDivElement>();
+  const mapsDivRef = useRef<HTMLDivElement>(null); // Use useRef instead of createRef
 
   useEffect(() => {
     const loadMap = async () => {
@@ -33,14 +33,30 @@ export default function LocationMap({ location, ...divProps }: Props) {
         map,
         position: location,
       });
+
+      // Optional: Return a cleanup function to remove the map
+      return () => {
+        if (mapsDivRef.current) {
+          mapsDivRef.current.innerHTML = ""; // Clear the map when unmounting
+        }
+      };
     };
 
-    loadMap();
+    const cleanup = loadMap();
+
+    return () => {
+      // Cleanup logic if necessary
+      cleanup?.(); // Call the cleanup function if it exists
+    };
   }, [location]); // Include 'location' in the dependency array
 
   return (
     <>
-      <div {...divProps} ref={mapsDivRef}></div>
+      <div
+        {...divProps}
+        ref={mapsDivRef}
+        style={{ width: "100%", height: "100%" }} // Ensure the map takes full space
+      ></div>
     </>
   );
 }

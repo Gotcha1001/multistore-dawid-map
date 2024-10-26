@@ -46,20 +46,11 @@ export default function DistancePicker({
       });
 
       Core.event.addListener(circle, "bounds_changed", () => {
-        const radius = circle.getRadius();
-        setRadius(radius);
-        if (radius > 1500000) map.setZoom(1);
-        else if (radius > 800000) map.setZoom(2);
-        else if (radius > 400000) map.setZoom(3);
-        else if (radius > 180000) map.setZoom(4);
-        else if (radius > 100000) map.setZoom(5);
-        else if (radius > 50000) map.setZoom(6);
-        else if (radius > 25000) map.setZoom(7);
-        else if (radius > 11000) map.setZoom(8);
-        else if (radius > 5000) map.setZoom(9);
-        else if (radius <= 10000) map.setZoom(10);
-        setZoom(map.getZoom() as number);
+        const newRadius = circle.getRadius();
+        setRadius(newRadius);
+        adjustMapZoom(map, newRadius); // Function to adjust zoom level
       });
+
       Core.event.addListener(circle, "center_changed", () => {
         const circleCenter: Location | undefined = circle.getCenter()?.toJSON();
         if (circleCenter) {
@@ -81,7 +72,7 @@ export default function DistancePicker({
       console.log("using center from LS");
       setCenter(JSON.parse(centerFromLS));
     }
-  }, [center]);
+  }, [center]); // Keep 'center' as dependency, we'll add others below
 
   useEffect(() => {
     if (center && radius) {
@@ -97,6 +88,21 @@ export default function DistancePicker({
       (err) => setGeoError(err.message)
     );
   }, []);
+
+  // New function to adjust map zoom based on the radius
+  const adjustMapZoom = (map: google.maps.Map, radius: number) => {
+    if (radius > 1500000) map.setZoom(1);
+    else if (radius > 800000) map.setZoom(2);
+    else if (radius > 400000) map.setZoom(3);
+    else if (radius > 180000) map.setZoom(4);
+    else if (radius > 100000) map.setZoom(5);
+    else if (radius > 50000) map.setZoom(6);
+    else if (radius > 25000) map.setZoom(7);
+    else if (radius > 11000) map.setZoom(8);
+    else if (radius > 5000) map.setZoom(9);
+    else if (radius <= 10000) map.setZoom(10);
+    setZoom(map.getZoom() as number); // Update zoom state
+  };
 
   return (
     <>
