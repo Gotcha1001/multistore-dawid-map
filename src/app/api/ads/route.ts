@@ -3,6 +3,7 @@ import { Ad, AdModel } from "@/models/Ad";
 import { FilterQuery } from "mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/auth";
+import { PipelineStage } from "mongoose";
 
 // Asynchronous function to handle GET requests
 export async function GET(req: Request) {
