@@ -1,9 +1,11 @@
+// UploadArea.tsx
 import { faAdd, faImage } from "@fortawesome/free-solid-svg-icons";
 import Uploader from "./Uploader";
-import { UploadResponse } from "imagekit/dist/libs/interfaces";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
+// Ensure you're importing UploadResponse from the correct package
+import { UploadResponse } from "imagekitio-react/dist/types/interfaces"; // Change this line
 
 type Props = {
   files: UploadResponse[];
@@ -22,10 +24,10 @@ export default function UploadArea({ files, setFiles }: Props) {
         <FontAwesomeIcon icon={faImage} className="h-24 text-gray-300" />
         <label
           className={
-            "upload-btn  mt-3 border px-4 py-2 rounded-lg inline-flex gap-1 items-center justify-center" +
+            "upload-btn mt-3 border px-4 py-2 rounded-lg inline-flex gap-1 items-center justify-center" +
             (isUploading
-              ? "text-gray-400 cursor-not-allowed"
-              : "  border-blue-500 text-blue-600 cursor-pointer")
+              ? " text-gray-400 cursor-not-allowed"
+              : " border-blue-500 text-blue-600 cursor-pointer")
           }
         >
           <Uploader
