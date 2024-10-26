@@ -1,6 +1,6 @@
 import { connect } from "@/libs/helpers";
 import { Ad, AdModel } from "@/models/Ad";
-import { FilterQuery, PipelineStage } from "mongoose";
+import { FilterQuery } from "mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/auth";
 

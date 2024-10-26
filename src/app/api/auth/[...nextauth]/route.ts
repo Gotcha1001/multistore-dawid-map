@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 
 import ImageKit from "imagekit";
-import { authOptions } from "./auth";
 
 export const GET = async () => {
   const session = await getServerSession(authOptions);
