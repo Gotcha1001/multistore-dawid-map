@@ -5,46 +5,31 @@ import AdItem from "@/components/AdItem";
 import { authOptions } from "../api/auth/[...nextauth]/auth";
 import { Types } from "mongoose";
 
-type Convertible =
-  | Types.ObjectId
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | Convertible[]
-  | { [key: string]: Convertible };
-
-interface Ad {
+// Adjust the Ad type here to match the structure returned by your model
+type Ad = {
   _id: string;
-  name: string;
-  url: string;
-  // Add other properties based on your Ad schema
-}
-
-const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
-  if (obj === null || obj === undefined) {
-    return obj;
-  }
-
-  if (obj instanceof Types.ObjectId) {
-    return obj.toString();
-  }
-
-  if (Array.isArray(obj)) {
-    return obj.map(convertObjectIdsToStrings);
-  }
-
-  if (typeof obj === "object") {
-    return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        key,
-        convertObjectIdsToStrings(value),
-      ])
-    );
-  }
-
-  return obj;
+  title: string;
+  price: number;
+  category: string;
+  description: string;
+  contact: string;
+  files: {
+    fileId: string;
+    // Ensure these properties exist in the UploadResponse
+    name: string;
+    url: string;
+    thumbnailUrl: string;
+    height: number;
+    width: number;
+    // Include any additional properties you expect
+  }[];
+  location: {
+    lat: number;
+    lng: number;
+  };
+  userEmail: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export default async function MyAdsPage() {
@@ -56,18 +41,38 @@ export default async function MyAdsPage() {
   }
 
   await connect();
-  const rawAds: Ad[] = await AdModel.find({ userEmail: email }).lean();
-  const ads: Ad[] = convertObjectIdsToStrings(rawAds) as Ad[];
+  const rawAds = await AdModel.find({ userEmail: email }).lean();
+
+  // You may want to cast rawAds to Ad[] if necessary
+  const ads: Ad[] = rawAds.map((ad) => ({
+    _id: ad._id,
+    title: ad.title,
+    price: ad.price,
+    category: ad.category,
+    description: ad.description,
+    contact: ad.contact,
+    files: ad.files.map((file) => ({
+      fileId: file.fileId,
+      name: file.name,
+      url: file.url,
+      thumbnailUrl: file.thumbnailUrl,
+      height: file.height,
+      width: file.width,
+      // Any other properties you may want to include
+    })),
+    location: ad.location,
+    userEmail: ad.userEmail,
+    createdAt: ad.createdAt,
+    updatedAt: ad.updatedAt,
+  }));
 
   return (
     <div className="container my-6 gradient-background2 rounded-lg mx-auto">
       <h1 className="text-3xl text-white font-bold mb-4 text-center">My Ads</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
-        {ads && ads.length > 0 ? (
-          ads.map((ad) => <AdItem key={ad._id} ad={ad} />)
-        ) : (
-          <p>No ads available.</p>
-        )}
+        {ads?.map((ad) => (
+          <AdItem key={ad._id} ad={ad} />
+        ))}
       </div>
     </div>
   );
