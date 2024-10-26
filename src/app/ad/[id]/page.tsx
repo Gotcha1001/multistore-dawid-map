@@ -12,7 +12,9 @@ import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 
-// Define a union type for the input to the helper function
+// Refined Convertible type
+type FileType = "image" | "video" | "document"; // Modify as necessary
+
 type Convertible =
   | Types.ObjectId
   | string
@@ -21,9 +23,30 @@ type Convertible =
   | null
   | undefined
   | Convertible[]
-  | { [key: string]: Convertible };
+  | {
+      [key: string]: Convertible;
+      embeddedMetadata?: {
+        [key: string]:
+          | string
+          | number
+          | boolean
+          | Date
+          | (string | number | boolean | Date)[];
+      } | null;
+      fileId?: string;
+      name?: string;
+      url?: string;
+      thumbnailUrl?: string;
+      height?: number;
+      width?: number;
+      size?: number;
+      fileType?: FileType;
+      filePath?: string;
+      tags?: string[];
+      isPrivateFile?: boolean;
+      isPublished?: boolean;
+    };
 
-// Helper function to convert ObjectIds to strings
 const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
   if (obj === null || obj === undefined) {
     return obj;
@@ -65,7 +88,18 @@ export default async function SingleAdPage(args: Props) {
     return "Not Found!!!";
   }
 
-  const ad = convertObjectIdsToStrings(rawAd);
+  // Type assertion if needed, you can also define a more specific type for the ad
+  const ad = convertObjectIdsToStrings(rawAd) as {
+    _id: string;
+    title: string;
+    userEmail: string;
+    price: number;
+    category: string;
+    description: string;
+    contact: string;
+    location: { lat: number; lng: number }; // Adjust based on your location type
+    files: any[]; // Define a proper type based on your file structure
+  };
 
   return (
     <div className="flex flex-col md:flex-row absolute inset-0 top-28 gap-4 p-4">
@@ -81,7 +115,7 @@ export default async function SingleAdPage(args: Props) {
           {ad.title}
         </h1>
 
-        {session && session.user.email === ad.userEmail && (
+        {session && session?.user?.email === ad.userEmail && (
           <div className="mt-2 flex gap-2">
             <Link
               href={`/edit/${ad._id}`}
