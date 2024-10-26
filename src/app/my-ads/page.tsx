@@ -15,9 +15,14 @@ type Location = {
 };
 
 type UploadResponse = {
-  // Define the structure based on your use case
+  // Ensure this structure matches the response from ImageKit
   url: string;
   name: string;
+  fileId: string; // Added required fields based on the error
+  thumbnailUrl?: string; // Optional fields
+  height?: number;
+  width?: number;
+  // Add any other required properties from the UploadResponse type here
 };
 
 type AdDocument = {
@@ -29,7 +34,7 @@ type AdDocument = {
   contact: string;
   userEmail: string;
   location: Location;
-  files: UploadResponse[];
+  files: UploadResponse[]; // Ensure this matches what your Ad model expects
   createdAt: Date;
   updatedAt: Date;
 };
@@ -37,6 +42,7 @@ type AdDocument = {
 // Define the converted document type
 type ConvertedAd = Omit<AdDocument, "_id"> & {
   _id: string;
+  files: UploadResponse[]; // Make sure this matches the expected type
 };
 
 // Function to convert ObjectId to string
@@ -84,7 +90,7 @@ export default async function MyAdsPage() {
       <h1 className="text-3xl text-white font-bold mb-4 text-center">My Ads</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-4">
         {ads.map((ad) => (
-          <AdItem key={ad._id} ad={ad} /> // ad is now a plain object
+          <AdItem key={ad._id} ad={ad} /> // Ensure AdItem component is compatible with ConvertedAd type
         ))}
       </div>
     </div>
