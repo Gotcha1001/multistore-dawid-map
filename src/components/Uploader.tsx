@@ -1,20 +1,59 @@
-import { IKContext, IKUpload } from "imagekitio-react";
-import { IKUploadProps } from "imagekitio-react/dist/types/components/IKUpload/props";
+import { faAdd, faImage } from "@fortawesome/free-solid-svg-icons";
+import Uploader from "./Uploader";
+import { ExtendedUploadResponse } from "imagekit-javascript/dist/src/interfaces"; // Update this import to the correct path
+import { Dispatch, SetStateAction, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import UploadThumbnail from "./UploadThumbnail";
 
-// Extend IKUploadProps if you need additional custom props
-type UploaderProps = IKUploadProps;
+type Props = {
+  files: ExtendedUploadResponse[]; // Update this type
+  setFiles: Dispatch<SetStateAction<ExtendedUploadResponse[]>>; // Update this type
+};
 
-export default function Uploader(props: UploaderProps) {
+export default function UploadArea({ files, setFiles }: Props) {
+  const [isUploading, setIsUploading] = useState(false);
+
   return (
-    <IKContext
-      urlEndpoint={process.env.NEXT_PUBLIC_IK_ENDPOINT || ""}
-      publicKey={process.env.NEXT_PUBLIC_IK_PUBLIC_KEY || ""}
-      authenticator={async () => {
-        const response = await fetch("/api/imagekit/auth");
-        return await response.json();
-      }}
-    >
-      <IKUpload {...props} />
-    </IKContext>
+    <div className="bg-gray-100 p-4 rounded-md">
+      <h2 className="text-center text-gray-400 uppercase text-xs font-bold">
+        Add Photos of your Product:
+      </h2>
+      <div className="flex flex-col">
+        <FontAwesomeIcon icon={faImage} className="h-24 text-gray-300" />
+        <label
+          className={
+            "upload-btn mt-3 border px-4 py-2 rounded-lg inline-flex gap-1 items-center justify-center" +
+            (isUploading
+              ? " text-gray-400 cursor-not-allowed"
+              : " border-blue-500 text-blue-600 cursor-pointer")
+          }
+        >
+          <Uploader
+            onUploadStart={() => setIsUploading(true)}
+            onSuccess={(file: ExtendedUploadResponse) => {
+              // Update the type here
+              setFiles((prev) => [...prev, file]); // Add the file to the state
+              setIsUploading(false); // Stop the upload process
+            }}
+          />
+
+          {isUploading ? (
+            <span>Uploading...</span>
+          ) : (
+            <>
+              <FontAwesomeIcon icon={faAdd} />
+              <span>Add Photos</span>
+            </>
+          )}
+        </label>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {files.map((file) => (
+            <div key={file.fileId} className="size-16 rounded overflow-hidden">
+              <UploadThumbnail file={file} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

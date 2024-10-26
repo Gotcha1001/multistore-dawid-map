@@ -1,13 +1,16 @@
 import { faAdd, faImage } from "@fortawesome/free-solid-svg-icons";
 import Uploader from "./Uploader";
-import { UploadResponse } from "imagekit/dist/libs/interfaces";
+
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
+import { UploadResponse as IKUploadResponse } from "imagekit-javascript/dist/src/interfaces/UploadResponse"; // Use this import
+// ... other imports remain the same
 
+// Update the Props type
 type Props = {
-  files: UploadResponse[];
-  setFiles: Dispatch<SetStateAction<UploadResponse[]>>;
+  files: IKUploadResponse[]; // Change to the imported UploadResponse type
+  setFiles: Dispatch<SetStateAction<IKUploadResponse[]>>; // Same here
 };
 
 export default function UploadArea({ files, setFiles }: Props) {
@@ -30,12 +33,12 @@ export default function UploadArea({ files, setFiles }: Props) {
         >
           <Uploader
             onUploadStart={() => setIsUploading(true)}
-            onSuccess={(file: UploadResponse) => {
-              setFiles((prev) => [...prev, file]); // Add the file to the state
-              setIsUploading(false); // Stop the upload process
+            onSuccess={(file: IKUploadResponse) => {
+              // Change here
+              setFiles((prev) => [...prev, file]);
+              setIsUploading(false);
             }}
           />
-
           {isUploading ? (
             <span>Uploading...</span>
           ) : (
