@@ -1,5 +1,5 @@
 "use client";
-import { UploadResponse as ImageKitUploadResponse } from "imagekit"; // Ensure correct import
+
 import Link from "next/link";
 import UploadThumbnail from "./UploadThumbnail";
 import { motion } from "framer-motion";
