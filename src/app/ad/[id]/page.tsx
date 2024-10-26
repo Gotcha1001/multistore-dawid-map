@@ -12,13 +12,60 @@ import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 
-const convertObjectIdsToStrings = (obj: any): any => {
+// Define base types for the ad document
+type Location = {
+  lat: number;
+  lng: number;
+  address: string;
+};
+
+type AdDocument = {
+  _id: Types.ObjectId;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  contact: string;
+  userEmail: string;
+  location: Location;
+  files: Array<{
+    fileId: string;
+    filePath: string;
+    [key: string]: unknown;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// Define the type for converted document (strings instead of ObjectIds)
+type ConvertedAd = Omit<AdDocument, "_id"> & {
+  _id: string;
+};
+
+// Define a union type for the input to the helper function
+type Convertible =
+  | Types.ObjectId
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | Date
+  | Convertible[]
+  | { [key: string]: Convertible };
+
+// Helper function to convert ObjectIds to strings
+const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
   if (obj === null || obj === undefined) {
     return obj;
   }
 
   if (obj instanceof Types.ObjectId) {
     return obj.toString();
+  }
+
+  if (obj instanceof Date) {
+    return obj;
   }
 
   if (Array.isArray(obj)) {
@@ -46,14 +93,16 @@ type Props = {
 
 export default async function SingleAdPage(args: Props) {
   await connect();
-  const rawAd = await AdModel.findById(args.params.id).lean();
+  const rawAd = (await AdModel.findById(
+    args.params.id
+  ).lean()) as AdDocument | null;
   const session = await getServerSession(authOptions);
 
   if (!rawAd) {
     return "Not Found!!!";
   }
 
-  const ad = convertObjectIdsToStrings(rawAd);
+  const ad = convertObjectIdsToStrings(rawAd) as ConvertedAd;
 
   return (
     <div className="flex flex-col md:flex-row absolute inset-0 top-28 gap-4 p-4">
@@ -118,11 +167,6 @@ export default async function SingleAdPage(args: Props) {
             className="w-full h-48 md:h-64 rounded-lg"
             location={ad.location}
           />
-          {/* 
-          <p className="mt-2 md:mt-4 text-gray-400 text-xs">
-            Posted: {formatDate(ad.createdAt)} <br />
-            Last Updated: {formatDate(ad.updatedAt)}
-          </p> */}
         </div>
       </div>
     </div>
