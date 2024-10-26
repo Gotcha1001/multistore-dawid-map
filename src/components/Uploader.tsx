@@ -1,24 +1,5 @@
 import { IKContext, IKUpload } from "imagekitio-react";
-
-// Define specific types for the ImageKit response
-interface IKUploadResponse {
-  fileId: string;
-  name: string;
-  url: string;
-  thumbnailUrl: string;
-  height: number;
-  width: number;
-  size: number;
-  filePath: string;
-  fileType: string;
-  tags?: string[];
-  AITags?: string[];
-  versionInfo?: {
-    id: string;
-    name: string;
-  };
-  metadata?: Record<string, unknown>;
-}
+import { UploadResponse } from "imagekit/dist/libs/interfaces";
 
 // Define upload progress event type
 interface IKUploadProgressEvent {
@@ -51,7 +32,7 @@ interface UploaderProps {
   transformation?: string;
   customMetadata?: Record<string, unknown>;
   onError?: (err: Error) => void;
-  onSuccess?: (response: IKUploadResponse) => void;
+  onSuccess?: (response: UploadResponse) => void;
   onUploadStart?: (evt: IKUploadStartEvent) => void;
   onUploadProgress?: (evt: IKUploadProgressEvent) => void;
   style?: React.CSSProperties;
