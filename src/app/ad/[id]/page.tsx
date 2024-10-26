@@ -12,13 +12,21 @@ import { Types } from "mongoose";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 
-// Define base types for the ad document
+// Define file type
+type FileType = {
+  fileId: string;
+  filePath: string;
+  [key: string]: unknown;
+};
+
+// Define location type
 type Location = {
   lat: number;
   lng: number;
   address: string;
 };
 
+// Define the ad document type
 type AdDocument = {
   _id: Types.ObjectId;
   title: string;
@@ -28,21 +36,22 @@ type AdDocument = {
   contact: string;
   userEmail: string;
   location: Location;
-  files: Array<{
-    fileId: string;
-    filePath: string;
-    [key: string]: unknown;
-  }>;
+  files: FileType[];
   createdAt: Date;
   updatedAt: Date;
 };
 
-// Define the type for converted document (strings instead of ObjectIds)
+// Define the converted document type
 type ConvertedAd = Omit<AdDocument, "_id"> & {
   _id: string;
 };
 
-// Define a union type for the input to the helper function
+// Define recursive type for objects
+type RecursiveObject = {
+  [key: string]: Convertible;
+};
+
+// Define union type for convertible values
 type Convertible =
   | Types.ObjectId
   | string
@@ -51,10 +60,11 @@ type Convertible =
   | null
   | undefined
   | Date
+  | FileType
+  | Location
   | Convertible[]
-  | { [key: string]: Convertible };
+  | RecursiveObject;
 
-// Helper function to convert ObjectIds to strings
 const convertObjectIdsToStrings = (obj: Convertible): Convertible => {
   if (obj === null || obj === undefined) {
     return obj;
