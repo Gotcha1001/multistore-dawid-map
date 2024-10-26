@@ -1,17 +1,7 @@
-"use effect";
-import {
-  createRef,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { Loader } from "@googlemaps/js-api-loader";
+"use client";
 
-const locationDefault = {
-  lat: -29.78526006662728,
-  lng: 31.041701528306643,
-};
+import { createRef, useEffect, useCallback } from "react";
+import { Loader } from "@googlemaps/js-api-loader";
 
 export type Location = {
   lat: number;
@@ -29,7 +19,7 @@ export default function LocationPicker({
 }) {
   const divRef = createRef<HTMLDivElement>();
 
-  async function loadMap() {
+  const loadMap = useCallback(async () => {
     const loader = new Loader({
       apiKey: process.env.NEXT_PUBLIC_MAPS_KEY as string,
     });
@@ -56,15 +46,15 @@ export default function LocationPicker({
         onChange({ lat, lng });
       }
     });
-  }
+  }, [defaultLocation, onChange]); // Added dependencies
 
   useEffect(() => {
     loadMap();
-  }, []);
+  }, [loadMap]); // Included loadMap in the dependency array
 
   useEffect(() => {
     loadMap();
-  }, [gpsCoords]);
+  }, [loadMap, gpsCoords]); // Added loadMap as a dependency
 
   return (
     <>

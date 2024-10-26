@@ -1,5 +1,4 @@
 import { categories } from "@/libs/helpers";
-import { option } from "framer-motion/client";
 
 export type AdTexts = {
   title?: string;

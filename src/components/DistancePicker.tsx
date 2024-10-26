@@ -38,13 +38,13 @@ export default function DistancePicker({
         setCenter(JSON.parse(centerFromLS));
       }
     }
-  }, [center]);
+  }, [center, loadMap]);
 
   useEffect(() => {
     if (center && radius) {
       onChange({ center, radius });
     }
-  }, [radius, center]);
+  }, [radius, center, onChange]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(

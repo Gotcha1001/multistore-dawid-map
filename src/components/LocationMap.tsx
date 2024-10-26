@@ -13,7 +13,7 @@ export default function LocationMap({ location, ...divProps }: Props) {
 
   useEffect(() => {
     loadMap();
-  }, []);
+  }, [loadMap]);
 
   async function loadMap() {
     const loader = new Loader({

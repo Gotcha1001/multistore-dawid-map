@@ -22,7 +22,7 @@ export default function SearchForm({ action }: Props) {
       formRef.current?.requestSubmit();
       setPrevCenter(center);
     }
-  }, []);
+  }, [center, prevCenter]); // Added center and prevCenter as dependencies
 
   return (
     <form

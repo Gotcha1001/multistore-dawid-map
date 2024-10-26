@@ -6,7 +6,7 @@ import Gallery from "@/components/Gallery";
 import LocationMap from "@/components/LocationMap";
 import { connect, formatDate, formatMoney } from "@/libs/helpers";
 import { AdModel } from "@/models/Ad";
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getServerSession } from "next-auth";
 import Link from "next/link";

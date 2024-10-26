@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 
 // Asynchronous function to handle GET requests
-export async function GET(req: Request, res: Response) {
+export async function GET(req: Request) {
   await connect();
 
   const { searchParams } = new URL(req.url);

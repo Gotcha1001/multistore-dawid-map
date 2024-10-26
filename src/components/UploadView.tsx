@@ -1,5 +1,4 @@
 import { UploadResponse } from "imagekit/dist/libs/interfaces";
-import Image from "next/image";
 import MyImage from "./MyImage";
 
 export default function UploadView({ file }: { file: UploadResponse }) {

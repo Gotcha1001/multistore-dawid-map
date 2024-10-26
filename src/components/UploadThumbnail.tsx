@@ -21,11 +21,10 @@ export default function UploadThumbnail({ file, onClick }: Props) {
         <MyImage
           width={300}
           height={300}
-          alt={"product thumbnail"}
+          alt="Uploaded thumbnail" // Use one alt prop
           src={file.filePath}
           aiCrop={true}
-          alt="Uploaded thumbnail"
-          className=" object-contain"
+          className="object-contain"
         />
       </a>
     );

@@ -1,4 +1,5 @@
 "use client";
+
 import Image, { ImageProps } from "next/image";
 import { motion } from "framer-motion";
 
@@ -31,9 +32,11 @@ const imageKitLoader = ({
 
   const paramString = params.join(",");
 
-  var urlEndpoint = process.env.NEXT_PUBLIC_IK_ENDPOINT as string;
+  // Change var to const
+  let urlEndpoint = process.env.NEXT_PUBLIC_IK_ENDPOINT as string;
   if (urlEndpoint[urlEndpoint.length - 1] === "/")
     urlEndpoint = urlEndpoint.substring(0, urlEndpoint.length - 1);
+
   return `${urlEndpoint}/${src}?tr=${paramString}`;
 };
 
@@ -43,7 +46,14 @@ type MyImageProps = ImageProps & {
   width: number;
 };
 
-const MyImage = ({ width, height, aiCrop, ...props }: MyImageProps) => {
+const MyImage = ({
+  width,
+  height,
+  aiCrop,
+  alt = "",
+  ...props
+}: MyImageProps) => {
+  // Added default alt prop
   return (
     <motion.div
       whileHover={{ scale: 1.1 }} // Scale up on hover
@@ -61,6 +71,7 @@ const MyImage = ({ width, height, aiCrop, ...props }: MyImageProps) => {
         }
         width={width}
         height={height}
+        alt={alt} // Ensure alt prop is passed
         {...props}
       />
     </motion.div>
