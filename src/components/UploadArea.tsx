@@ -1,10 +1,9 @@
 import { faAdd, faImage } from "@fortawesome/free-solid-svg-icons";
 import Uploader from "./Uploader";
-
+import { UploadResponse } from "imagekit/dist/libs/interfaces";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UploadThumbnail from "./UploadThumbnail";
-import { UploadResponse } from "imagekit/dist/libs/interfaces";
 
 type Props = {
   files: UploadResponse[];
