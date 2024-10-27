@@ -29,8 +29,15 @@ export default function Home() {
     console.log("Fetching ads with URL:", url);
 
     fetch(url)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          console.error("Response was not ok:", response);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((adsDocs) => {
+        console.log("Fetched ads:", adsDocs); // Log the fetched ads
         setAds(adsDocs);
         setAdsParams(params);
       })
