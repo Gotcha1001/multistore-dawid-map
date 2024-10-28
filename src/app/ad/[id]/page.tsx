@@ -100,7 +100,7 @@ export default async function SingleAdPage(args: Props) {
   const session = await getServerSession(authOptions);
 
   if (!rawAd) {
-    return "Not Found!!!";
+    return <div>Not Found</div>; // Return JSX, not a string
   }
 
   const ad = convertObjectIdsToStrings(rawAd) as ConvertedAd;
