@@ -49,7 +49,7 @@ export default function DistancePicker({
       Core.event.addListener(circle, "bounds_changed", () => {
         const newRadius = circle.getRadius();
         setRadius(newRadius);
-        adjustMapZoom(map, newRadius); // Function to adjust zoom level
+        adjustMapZoom(map, newRadius);
       });
 
       Core.event.addListener(circle, "center_changed", () => {
@@ -71,9 +71,16 @@ export default function DistancePicker({
     if (!center && window.localStorage) {
       const centerFromLS = window.localStorage.getItem("center") || "";
       console.log("using center from LS");
-      setCenter(JSON.parse(centerFromLS));
+      try {
+        const parsedCenter = JSON.parse(centerFromLS);
+        if (parsedCenter) {
+          setCenter(parsedCenter);
+        }
+      } catch (error) {
+        console.error("Failed to parse center from localStorage:", error);
+      }
     }
-  }, [center, radius, zoom]); // Added 'radius' and 'zoom' to the dependency array
+  }, [center, radius, zoom]);
 
   useEffect(() => {
     if (center && radius) {
@@ -90,7 +97,6 @@ export default function DistancePicker({
     );
   }, []);
 
-  // New function to adjust map zoom based on the radius
   const adjustMapZoom = (map: google.maps.Map, radius: number) => {
     if (radius > 1500000) map.setZoom(1);
     else if (radius > 800000) map.setZoom(2);
@@ -102,7 +108,7 @@ export default function DistancePicker({
     else if (radius > 11000) map.setZoom(8);
     else if (radius > 5000) map.setZoom(9);
     else if (radius <= 10000) map.setZoom(10);
-    setZoom(map.getZoom() as number); // Update zoom state
+    setZoom(map.getZoom() as number);
   };
 
   return (
