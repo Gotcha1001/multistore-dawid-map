@@ -31,11 +31,12 @@ export default function Home() {
     fetch(url)
       .then(async (response) => {
         if (!response.ok) {
-          const errorText = await response.text(); // Capture response text for debugging
+          const errorText = await response.text();
           console.error("Response was not ok:", errorText);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
+        const jsonResponse = await response.text(); // Read as text
+        return jsonResponse ? JSON.parse(jsonResponse) : []; // Parse if non-empty
       })
       .then((adsDocs) => {
         console.log("Fetched ads:", adsDocs);

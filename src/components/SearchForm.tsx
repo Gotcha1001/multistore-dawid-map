@@ -2,7 +2,7 @@ import { categories, defaultRadius } from "@/libs/helpers";
 import LabelRadioButton from "./LabelRadioButton";
 import SubmitButton from "./SubmitButton";
 import { faStore } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import DistancePicker from "./DistancePicker";
 import { Location } from "./LocationPicker";
 
@@ -15,14 +15,14 @@ export default function SearchForm({ action }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [radius, setRadius] = useState(defaultRadius);
   const [center, setCenter] = useState<Location | null>(null);
-  // const [prevCenter, setPrevCenter] = useState<Location | null>(null);
+  const [prevCenter, setPrevCenter] = useState<Location | null>(null);
 
-  // useEffect(() => {
-  //   if (center && !prevCenter) {
-  //     formRef.current?.requestSubmit();
-  //     setPrevCenter(center);
-  //   }
-  // }, [center, prevCenter]);
+  useEffect(() => {
+    if (center && !prevCenter) {
+      formRef.current?.requestSubmit();
+      setPrevCenter(center);
+    }
+  }, [center, prevCenter]);
 
   return (
     <form
