@@ -3,7 +3,7 @@ import LabelRadioButton from "./LabelRadioButton";
 import SubmitButton from "./SubmitButton";
 import { faStore } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
-import DistancePicker from "./DistancePicker";
+// import DistancePicker from "./DistancePicker";
 import { Location } from "./LocationPicker";
 
 type Props = {
@@ -13,16 +13,16 @@ type Props = {
 // SearchForm.tsx
 export default function SearchForm({ action }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const [radius, setRadius] = useState(defaultRadius);
-  const [center, setCenter] = useState<Location | null>(null);
+  // const [radius, setRadius] = useState(defaultRadius);
+  // const [center, setCenter] = useState<Location | null>(null);
   const [prevCenter, setPrevCenter] = useState<Location | null>(null);
 
-  useEffect(() => {
-    if (center && !prevCenter) {
-      formRef.current?.requestSubmit();
-      setPrevCenter(center);
-    }
-  }, [center, prevCenter]); // Added center and prevCenter as dependencies
+  // useEffect(() => {
+  //   if (center && !prevCenter) {
+  //     formRef.current?.requestSubmit();
+  //     setPrevCenter(center);
+  //   }
+  // }, [center, prevCenter]);
 
   return (
     <form
