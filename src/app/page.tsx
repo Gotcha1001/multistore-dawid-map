@@ -13,7 +13,7 @@ export default function Home() {
   );
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  function fetchAds(params?: URLSearchParams) {
+  async function fetchAds(params?: URLSearchParams) {
     if (!params) {
       params = new URLSearchParams();
     }
@@ -25,27 +25,32 @@ export default function Home() {
       params.set("radius", defaultRadius.toString());
     }
 
-    const url = `/api/ads?${params?.toString() || ""}`;
+    const url = `/api/ads?${params.toString()}`;
     console.log("Fetching ads with URL:", url);
 
-    fetch(url)
-      .then(async (response) => {
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Response was not ok:", errorText);
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonResponse = await response.text(); // Read as text
-        return jsonResponse ? JSON.parse(jsonResponse) : []; // Parse if non-empty
-      })
-      .then((adsDocs) => {
-        console.log("Fetched ads:", adsDocs);
-        setAds(adsDocs);
-        setAdsParams(params);
-      })
-      .catch((error) => {
-        console.error("Error fetching ads:", error);
-      });
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Response was not ok:", errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Check if response has content before parsing
+      const text = await response.text();
+      if (!text) {
+        console.warn("No content in response");
+        setAds([]);
+        return;
+      }
+
+      const adsDocs = JSON.parse(text);
+      console.log("Fetched ads:", adsDocs);
+      setAds(adsDocs);
+      setAdsParams(params);
+    } catch (error) {
+      console.error("Error fetching ads:", error);
+    }
   }
 
   function handleSearch(formData: FormData) {
