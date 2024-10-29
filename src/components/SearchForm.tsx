@@ -15,7 +15,7 @@ export default function SearchForm({ action }: Props) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [radius, setRadius] = useState(defaultRadius);
   const [center, setCenter] = useState<Location | null>(null);
-  const [prevCenter, setPrevCenter] = useState<Location | null>(null);
+  // const [prevCenter, setPrevCenter] = useState<Location | null>(null);
 
   // useEffect(() => {
   //   if (center && !prevCenter) {
