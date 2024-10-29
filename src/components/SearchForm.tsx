@@ -83,13 +83,13 @@ export default function SearchForm({ action }: Props) {
           name="center"
           value={center?.lat + "," + center?.lng}
         />
-        <DistancePicker
+        {/* <DistancePicker
           defaultRadius={defaultRadius}
           onChange={({ radius, center }) => {
             setRadius(radius);
             setCenter(center);
           }}
-        />
+        /> */}
       </div>
 
       <SubmitButton className="w-full">Search</SubmitButton>
